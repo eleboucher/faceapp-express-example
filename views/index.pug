@@ -2,7 +2,7 @@ extends layout
 
 block content
   form(method='post', enctype='multipart/form-data')
-    input(type='file', name='imageupload' required)
+    input(type='file', name='imageupload', accept="image/*", required)
     select(name="filter")
         each opt in opts
           option(value=opt.id) #{opt.title}
