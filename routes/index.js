@@ -24,19 +24,17 @@ router.get('/', async function(req, res, next) {
 router.post('/', upload.single('imageupload'), function(req, res) {
   const file = req.file;
   const filename =
-    file.path.substring(0, file.path.lastIndexOf('.') - 1) +
+    file.path.substring(0, file.path.lastIndexOf('.') - 1).replace('public', '') +
     `_${req.body.filter}.` +
     file.path.substring(file.path.lastIndexOf('.') + 1);
-  if (fs.existsSync(filename)) {
-    res.contentType('image/png');
-    res.send(fs.readFileSync(filename));
+  if (fs.existsSync('public' + filename)) {
+    res.render('image', { path: filename });
   } else {
     faceapp
       .process(req.file.path, req.body.filter)
       .then(image => {
-        res.contentType('image/png');
-        res.send(image);
-        fs.writeFileSync(filename, image);
+        fs.writeFileSync('public' + filename, image);
+        res.render('image', { path: filename });
       })
       .catch(err => {
         console.log(err);
